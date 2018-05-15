@@ -1,5 +1,5 @@
 ## Functional Use Cases: 
-![DESIGN]()
+![DESIGN](https://github.com/optichill/optichill/blob/master/doc/Design.jpg)
 ### Data Cleaning:
 * **Name**: bas_filter
 * **What it does**: Filtering out the features of the dataset to get only the BAS and measured values of the plant equipment. 
