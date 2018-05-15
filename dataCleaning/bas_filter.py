@@ -6,7 +6,7 @@ import os
 def import_and_filter(dat_folder, string, keys):
 	"""imports plant data and creates data frames with filtered data and keys
 	
-	Onput:
+	Input:
     dat_folder = folder containing raw data.
     string = prefix of the csv files to be imported.
     keys = file name from current directory containing the keys spreadsheet
@@ -36,9 +36,11 @@ def data_import(dat_folder, string, keys):
     
     #reads and appends content from file to a data frame
     df = pd.DataFrame()
+
     for lst in dat_list:
         df_add = pd.read_csv(lst)
         df = pd.concat([df, df_add], ignore_index=True)
+    
     key = pd.read_excel(keys)
     
     return df, key
@@ -46,8 +48,8 @@ def data_import(dat_folder, string, keys):
 def data_BAS(df, key):
 	'''Filters out non-BAS descriptors and data containing NaN values
 
-df = dataframe containing plant data
-key = dataframe containing descriptor key'''
+	df = dataframe containing plant data
+	key = dataframe containing descriptor key'''
 	key_bas = key.loc[key['PointType'].str.contains("BAS")==True,'DataPointName']
 
 	#converts pandas series to a list for future use
@@ -79,7 +81,10 @@ def alarm_filter(bas, key):
     #filters kes to select those with alarm units that are also BAS	
 	key_alarm = key[key['Units'].str.contains("Normal/Alarm")==True]
 	key_alarm_BAS = key_alarm.loc[key['PointType'].str.contains("BAS")==True, 'DataPointName']
+
 	for alm in key_alarm_BAS:
 		bas = bas[bas[alm] == 0]
+
 	bas = bas[bas['OptimumControl'] == 1]
+
 	return bas
