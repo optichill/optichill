@@ -24,6 +24,12 @@
 * **Input**: 
 * **Output**: 
 
+### Normalize predictions based on size:
+* **Name**:
+* **What it does**:
+* **Input**: 
+* **Output**:
+
 ### Fitting data from other plants with the features determined:
 * **Name**: 
 * **What it does**:

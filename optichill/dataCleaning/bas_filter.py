@@ -3,6 +3,7 @@ import numpy as np
 import glob
 import os
 
+<<<<<<< HEAD
 #############  Overall Function  ##################
 
 def train_plt_ref(train_folder, train_string, train_keys, test_folder, test_string, test_keys):
@@ -40,6 +41,8 @@ def import_and_filter(dat_folder, string, keys):
 	bas = data_BAS(df, key)
 	bas1 = alarm_filter(bas, key)
 	return bas1, key
+=======
+>>>>>>> 94153ebb45dbed36823b404b6571e0385755acc3
 
 def data_import(dat_folder, string, keys):
     """imports plant data and creates data frames with raw data and keys
@@ -51,6 +54,11 @@ def data_import(dat_folder, string, keys):
     Output:
     df = dataframe containing plant data
     key = dataframe containing descriptor key"""
+
+    # Assert that dat_folder is .csv
+
+    # Assert that string is string type
+
     #extracts file names
     dat_list = [f for f in glob.glob(os.path.join(dat_folder, string + '*'))]
     print(dat_list)
@@ -65,6 +73,26 @@ def data_import(dat_folder, string, keys):
     key = pd.read_excel(keys)
     
     return df, key
+
+
+def import_and_filter(dat_folder, string, keys):
+	"""imports plant data and creates data frames with filtered data and keys
+	
+	Input:
+    dat_folder = folder containing raw data.
+    string = prefix of the csv files to be imported.
+    keys = file name from current directory containing the keys spreadsheet
+
+    Output:
+    bas1 = dataframe containing filtered plant data
+    key = dataframe containing descriptor key"""
+
+	df, key = data_import(dat_folder, string, keys)
+	bas = data_BAS(df, key)
+	bas1 = alarm_filter(bas, key)
+	return bas1, key
+
+
 
 def data_BAS(df, key):
 	'''Filters out non-BAS descriptors and data containing NaN values
@@ -107,6 +135,7 @@ def data_BAS(df, key):
 	print('Original data contains '+str(df.shape[0])+' points and '+str(df.shape[1])+ ' dimensions.')
 	print('Filtered data contains '+str(bas.dropna().shape[0])+' points and '+str(bas.dropna().shape[1])+ ' dimensions.')
 	return bas.dropna()
+
 
 def alarm_filter(bas, key):
 	"""removes any datapoints with alarms going off or without optimum control
