@@ -3,7 +3,7 @@ import numpy as np
 import glob
 import os
 
-<<<<<<< HEAD
+#<<<<<<< HEAD
 #############  Overall Function  ##################
 
 def train_plt_ref(train_folder, train_string, train_keys, test_folder, test_string, test_keys):
@@ -41,8 +41,8 @@ def import_and_filter(dat_folder, string, keys):
 	bas = data_BAS(df, key)
 	bas1 = alarm_filter(bas, key)
 	return bas1, key
-=======
->>>>>>> 94153ebb45dbed36823b404b6571e0385755acc3
+#=======
+#>>>>>>> 94153ebb45dbed36823b404b6571e0385755acc3
 
 def data_import(dat_folder, string, keys):
     """imports plant data and creates data frames with raw data and keys
