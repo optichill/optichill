@@ -3,6 +3,27 @@ import numpy as np
 import glob
 import os
 
+#############  Overall Function  ##################
+
+def train_plt_ref(train_folder, train_string, train_keys, test_folder, test_string, test_keys):
+
+	print('Filtering Training Set')
+	df, key = data_import(train_folder, train_string, train_keys)
+	bas = data_BAS(df, key)
+	bas1_train = alarm_filter(bas, key)
+
+	print('Filtering Test Set')
+	df, key = data_import(test_folder, test_string, test_keys)
+	bas = data_BAS(df, key)
+	bas1 = alarm_filter(bas, key)
+
+	vals_test = [x for x in bas1.columns if x in bas1_train.columns]
+	bas1_test = bas1[vals_test]
+
+	return bas1_train, bas1_test
+
+############  Sub Components  #####################
+
 def import_and_filter(dat_folder, string, keys):
 	"""imports plant data and creates data frames with filtered data and keys
 	
@@ -51,12 +72,18 @@ def data_BAS(df, key):
 	df = dataframe containing plant data
 	key = dataframe containing descriptor key'''
 	key_bas = key.loc[key['PointType'].str.contains("BAS")==True,'DataPointName']
-
+	key_chiller = key.loc[key['PointType'].str.contains("Chiller")==True,'DataPointName']
+	key_condenser = key.loc[key['PointType'].str.contains("Condenser Water Pump")==True,'DataPointName']
+	key_cool = key.loc[key['PointType'].str.contains("Cooling Tower Cell")==True,'DataPointName']
+	
+	key = pd.concat([key_bas, key_condenser, key_cool, key_chiller], ignore_index = True)
+	#print(key.head())
 	#converts pandas series to a list for future use
-	val = key_bas.values.T.tolist()
+	val = key.values.T.tolist()
 
     #removes DataPointNames that containt the prefix CHWV
-	vals = [x for x in val if not x.startswith('CHWV')]
+	kw = [x for x in val if not 'kW' in x]
+	vals = [x for x in kw if not x.startswith('CHWV')]
 
     #tests whether all values from the point list spreadsheet are column headings of the dataset
 	for x in vals:
@@ -64,9 +91,18 @@ def data_BAS(df, key):
             #prints and removes any string not found in the data
 			print(x)
 			vals.remove(x)
-        
+        #tests whether all values from the point list spreadsheet are column headings of the dataset
+
+	vals_new = [x for x in vals if x in df.columns]
+	#vals_kw = [x for x in vals_new if not x]
+	#print(vals_new)
+	
+	#for x in df.columns:
+		#if x not in vals:
+            #prints and removes any string not found in the data
+			#print(x)
     #expresses data using columns specified by the vals list
-	bas = df[vals+['OptimumControl', 'kW/Ton']]
+	bas = df[vals_new+['OptimumControl', 'kW/Ton']]
     
 	print('Original data contains '+str(df.shape[0])+' points and '+str(df.shape[1])+ ' dimensions.')
 	print('Filtered data contains '+str(bas.dropna().shape[0])+' points and '+str(bas.dropna().shape[1])+ ' dimensions.')
@@ -80,11 +116,12 @@ def alarm_filter(bas, key):
 
     #filters kes to select those with alarm units that are also BAS	
 	key_alarm = key[key['Units'].str.contains("Normal/Alarm")==True]
-	key_alarm_BAS = key_alarm.loc[key['PointType'].str.contains("BAS")==True, 'DataPointName']
+	vals = [x for x in key_alarm if x in bas.columns]
 
-	for alm in key_alarm_BAS:
+	for alm in vals:
 		bas = bas[bas[alm] == 0]
 
 	bas = bas[bas['OptimumControl'] == 1]
 
 	return bas
+
