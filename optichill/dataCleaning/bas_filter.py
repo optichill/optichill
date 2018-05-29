@@ -18,8 +18,8 @@ def train_plt_ref(train_folder, train_string, train_keys, test_folder, test_stri
     test_keys = file name from current directory containing the keys spreadsheet
 
     Output:
-    bas1_train = dataframe containing filtered training plant data
-    bas1_test = dataframe containing filtered test plant data"""
+    df_bas1_train = dataframe containing filtered training plant data
+    df_bas1_test = dataframe containing filtered test plant data"""
 	print('Filtering Training Set')
 	df, key = data_import(train_folder, train_string, train_keys)
 	bas = data_BAS(df, key)
@@ -31,9 +31,10 @@ def train_plt_ref(train_folder, train_string, train_keys, test_folder, test_stri
 	bas1 = alarm_filter(bas, key)
 
 	vals_test = [x for x in bas1.columns if x in bas1_train.columns]
-	bas1_test = bas1[vals_test]
+	df_bas1_test = bas1[vals_test]
+	df_bas1_train = bas1_train[vals_test]
 
-	return bas1_train, bas1_test
+	return df_bas1_train, df_bas1_test
 
 ############  Sub Components  #####################
 
