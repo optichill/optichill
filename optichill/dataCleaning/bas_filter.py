@@ -7,7 +7,19 @@ import os
 #############  Overall Function  ##################
 
 def train_plt_ref(train_folder, train_string, train_keys, test_folder, test_string, test_keys):
+	"""imports test and train plant data and creates data frames with filtered data
+	
+	Input:
+    train_folder = folder containing raw data.
+    train_string = prefix of the csv files to be imported.
+    train_keys = file name from current directory containing the keys spreadsheet
+    test_folder = folder containing raw data.
+    test_string = prefix of the csv files to be imported.
+    test_keys = file name from current directory containing the keys spreadsheet
 
+    Output:
+    bas1_train = dataframe containing filtered training plant data
+    bas1_test = dataframe containing filtered test plant data"""
 	print('Filtering Training Set')
 	df, key = data_import(train_folder, train_string, train_keys)
 	bas = data_BAS(df, key)
