@@ -6,34 +6,20 @@
 * **Input**: Raw Spreadsheets. 
 * **Output**: Data with the desired features. 
 
-### Determining Feature importance: Decision Trees
+### Training Model with Gradient Boosting Machines
+* **Name**: GBM_model
+* **What it does**: Uses the scikit-learn toolbox to train a model with gradient boosting machines. 
+* **Input**: Dataset output from the data cleaning function.
+* **Output**: Trained model (hdf5?). 
+
+### Determining Feature importance: Gradient Boosting Machines
 * **Name**: feature_importance
-* **What it does**: Scales the different features from the Plant 1 dataset with their relation to the plant efficiency i.e. kW/ton. The deeper the decision tree for that partucilar feature, the higher the importance. 
-* **Input**: Dataset.
-* **Output**: Features with their corresponding importance. 
+* **What it does**: Uses the trained model to determine the relative importance of features, as determined by how often a split is made based on that feature within the decision trees of the gradient boosting machines. 
+* **Input**: Trained model.
+* **Output**: List of features with their corresponding relative importance. 
 
-### Regression analysis between the different features
-* **Name**: linear_regr
-* **What it does**: Fits different types of regression models on the different features of the data from the Plant 1 dataset to determine the coefficient and intercept between kW/ton and different features. 
-* **Input**: Dataset.
-* **Output**: Regression coefficients. 
-
-### Predict the efficiency with the different features 
-* **Name**: 
-* **What it does**:
-* **Input**: 
-* **Output**: 
-
-### Normalize predictions based on size:
-* **Name**:
-* **What it does**:
-* **Input**: 
-* **Output**:
-
-### Fitting data from other plants with the features determined:
-* **Name**: 
-* **What it does**:
-* **Input**: 
-* **Output**: 
-
-
+### Predict the efficiency of chiller plants
+* **Name**: GBM_predict 
+* **What it does**: Uses the trained model to predict the chiller plant efficiency on test data.
+* **Input**: Trained model
+* **Output**: Prediction values for test data.
