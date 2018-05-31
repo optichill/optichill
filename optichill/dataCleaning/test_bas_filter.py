@@ -4,6 +4,10 @@ import glob
 import os
 from dataCleaning import bas_filter
 
+def filter_and_clean():
+	"""This function tests the test"""
+	return
+
 
 def test_data_import():
 	"""This function tests the data_import function from bas_filter file."""
