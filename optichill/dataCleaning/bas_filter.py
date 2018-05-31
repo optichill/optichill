@@ -168,6 +168,7 @@ def data_BAS(df, key):
 	vals = [x for x in kw if not x.startswith('CHWV')]
 
     #tests whether all values from the point list spreadsheet are column headings of the dataset
+	print('Descriptors in the points list that are not in the datasets.')
 	for x in vals:
 		if x not in df.columns:
             #prints and removes any string not found in the data
@@ -187,7 +188,7 @@ def data_BAS(df, key):
 	bas = df[vals_new+['OptimumControl', 'kW/Ton']]
     
 	print('Original data contains '+str(df.shape[0])+' points and '+str(df.shape[1])+ ' dimensions.')
-	print('Filtered data contains '+str(bas.dropna().shape[0])+' points and '+str(bas.dropna().shape[1])+ ' dimensions.')
+	
 	return bas.dropna()
 
 
@@ -198,13 +199,24 @@ def alarm_filter(bas, key):
     key = dataframe containing descriptor key"""
 
     #filters kes to select those with alarm units that are also BAS	
-	key_alarm = key[key['Units'].str.contains("Normal/Alarm")==True]
-	vals = [x for x in key_alarm if x in bas.columns]
+	key_alarm = key.loc[key['Units'].str.contains("Normal/Alarm")==True, 'DataPointName']
 
+	vals = [x for x in key_alarm if x in bas.columns]
+	#print(vals)
 	for alm in vals:
+		bas_start = bas.shape[0]
 		bas = bas[bas[alm] == 0]
+
+		bas_end = bas.shape[0]
+		if bas_end != bas_start:
+			print('A '+alm+' was noted and '+str(bas_start-bas_end)+' datapoints were removed from the dataset.')
 
 	bas = bas[bas['OptimumControl'] == 1]
 
-	return bas
+	vals_rm = [x for x in bas.columns if not x in vals]
+	bas_new = bas[vals_rm].copy()
+
+	print('Filtered data contains '+str(bas_new.dropna().shape[0])+' points and '+str(bas_new.dropna().shape[1])+ ' dimensions.')
+
+	return bas_new
 
