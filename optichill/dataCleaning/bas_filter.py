@@ -6,6 +6,47 @@ import os
 #<<<<<<< HEAD
 #############  Overall Function  ##################
 
+def train_single_plt(folder, train_filenames, test_filenames, keys):
+	"""imports test and train plant data and creates data frames with filtered data
+	
+	Input:
+	folder = path to location of raw data files
+    train_filenames = list of filenames to be used as the training set.
+    test_filenames = list of filenames to be used as the testing set.
+    keys = file name from current directory containing the keys spreadsheet
+
+    Output:
+    df_bas1_train = dataframe containing filtered training data
+    df_ce bas1_test = dataframe containing filtered testS data"""
+	print('Filtering Training Set')
+
+	df = pd.DataFrame()
+
+	for train_string in train_filenames:
+
+		dfloop, key = data_import(folder, train_string, keys)
+		df = pd.concat([df, dfloop], ignore_index=True)
+
+	bas = data_BAS(df, key)
+	bas1_train = alarm_filter(bas, key)
+
+	print('Filtering Test Set')
+	df = pd.DataFrame()
+
+	for test_string in test_filenames:
+
+		dfloop, key = data_import(folder, test_string, keys)
+		df = pd.concat([df, dfloop], ignore_index=True)
+
+	bas = data_BAS(df, key)
+	bas1 = alarm_filter(bas, key)
+
+	vals_test = [x for x in bas1.columns if x in bas1_train.columns]
+	df_bas1_test = bas1[vals_test]
+	df_bas1_train = bas1_train[vals_test]
+
+	return df_bas1_train, df_bas1_test
+
 def train_plt_ref(train_folder, train_string, train_keys, test_folder, test_string, test_keys):
 	"""imports test and train plant data and creates data frames with filtered data
 	
@@ -19,7 +60,7 @@ def train_plt_ref(train_folder, train_string, train_keys, test_folder, test_stri
 
     Output:
     df_bas1_train = dataframe containing filtered training plant data
-    df_bas1_test = dataframe containing filtered test plant data"""
+    df_ce bas1_test = dataframe containing filtered test plant data"""
 	print('Filtering Training Set')
 	df, key = data_import(train_folder, train_string, train_keys)
 	bas = data_BAS(df, key)
