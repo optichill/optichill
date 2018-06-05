@@ -1,10 +1,19 @@
 ## Functional Use Cases: 
 ![DESIGN](https://github.com/optichill/optichill/blob/master/doc/Design.jpg)
 ### Data Cleaning:
-* **Name**: bas_filter
-* **What it does**: Filtering out the features of the dataset to get only the BAS and measured values of the plant equipment. 
-* **Input**: Raw Spreadsheets. 
-* **Output**: Data with the desired features. 
+* **Name**: bas_filter.train_single_plt
+* **What it does**: Imports test and train plant data and creates data frames with filtered data. 
+* **Input**: 
+*   folder = path to location of raw data files
+*   train_filenames = list of filenames to be used as the training set.
+*   test_filenames = list of filenames to be used as the testing set.
+*   keys = file name from current directory containing the keys spreadsheet
+*   include_alarms = include or remove alarms from dataset (default = True)
+*   dim_remove = list of descriptors to remove from the dataset (default = NULL)
+
+* **Output**:
+*   df_bas1_train = dataframe containing filtered training data
+*   df_bas1_test = dataframe containing filtered testS data
 
 ### Training Model with Gradient Boosting Machines
 * **Name**: GBM_model
