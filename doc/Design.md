@@ -4,16 +4,16 @@
 * **Name**: bas_filter.train_single_plt
 * **What it does**: Imports test and train plant data and creates data frames with filtered data. 
 * **Input**: 
-*   folder = path to location of raw data files
-*   train_filenames = list of filenames to be used as the training set.
-*   test_filenames = list of filenames to be used as the testing set.
-*   keys = file name from current directory containing the keys spreadsheet
-*   include_alarms = include or remove alarms from dataset (default = True)
-*   dim_remove = list of descriptors to remove from the dataset (default = NULL)
+* *  folder = path to location of raw data files
+* *  train_filenames = list of filenames to be used as the training set.
+* *  test_filenames = list of filenames to be used as the testing set.
+* *  keys = file name from current directory containing the keys spreadsheet
+* *  include_alarms = include or remove alarms from dataset (default = True)
+* *  dim_remove = list of descriptors to remove from the dataset (default = NULL)
 
 * **Output**:
-*   df_bas1_train = dataframe containing filtered training data
-*   df_bas1_test = dataframe containing filtered testS data
+* *  df_bas1_train = dataframe containing filtered training data
+* *  df_bas1_test = dataframe containing filtered testS data
 
 ### Training Model with Gradient Boosting Machines
 * **Name**: GBM_model
