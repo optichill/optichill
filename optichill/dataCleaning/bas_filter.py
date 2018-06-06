@@ -18,7 +18,7 @@ def train_single_plt(folder, train_filenames, test_filenames, keys, include_alar
 
     Output:
     df_bas1_train = dataframe containing filtered training data
-    df_ce bas1_test = dataframe containing filtered testS data"""
+    df_bas1_test = dataframe containing filtered testS data"""
 	print('Filtering Training Set')
 
 	bas1_train = import_and_filter(folder, train_filenames, keys, include_alarms=include_alarms, dim_remove=dim_remove)
