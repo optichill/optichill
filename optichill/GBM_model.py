@@ -35,10 +35,18 @@ def train_GBM_model(
 	return r2_score
 
 
-def feature_importance_list():
+def feature_importance_list(file_name_string):
 	"""
 	This function takes the trained model and returns an ordered list of the
-	relative importance of the features. There is an option to write to an Excel
+	relative importance of the features. This will be written to an Excel
 	file that the user will specify.
 	"""
+	# feauture_importance = trained_model.feature_importances_
+	# feautre_importance = 100.0 * (feature_importance / feature_importance.max())
+	# sorted_idx = np.argsort(feature_importance)
+	# pos = np.arange(sorted_idx.shape[0]) + 0.5
+	# x = test_dataframe.drop(['target'], axis=1).columns[sorted_idx]
+	# imp = feature_importance[sorted_idx]
+	# df_feats = pd.DataFrame({'Feature Name': x, 'Feature Importance': imp})
+	# df_feats.to_csv(file_name_string)
 	return
