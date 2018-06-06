@@ -3,74 +3,92 @@ import numpy as np
 import glob
 import os
 
-#############  Overall Function  ##################
+#  Overall Function  #
 
-def train_single_plt(folder, train_filenames, test_filenames, keys, include_alarms=True, dim_remove=[]):
-	"""imports test and train plant data and creates data frames with filtered data
-	
-	Input:
-	folder = path to location of raw data files
+
+def train_single_plt(
+    folder, train_filenames, test_filenames,
+    keys, include_alarms=True, dim_remove=[]
+):
+    """imports test and train plant data and creates data frames with filtered data
+    Input:
+    folder = path to location of raw data files
     train_filenames = list of filenames to be used as the training set.
     test_filenames = list of filenames to be used as the testing set.
     keys = file name from current directory containing the keys spreadsheet
     include_alarms = include or remove alarms from dataset (default = True)
-    dim_remove = list of descriptors to remove from the dataset (default = NULL)
+    dim_remove = list of descriptors to remove from dataset (default = NULL)
 
     Output:
     df_bas1_train = dataframe containing filtered training data
     df_bas1_test = dataframe containing filtered testS data"""
-	print('Filtering Training Set')
+    print('Filtering Training Set')
 
-	bas1_train = import_and_filter(folder, train_filenames, keys, include_alarms=include_alarms, dim_remove=dim_remove)
+    bas1_train = import_and_filter(
+        folder, train_filenames, keys,
+        include_alarms=include_alarms, dim_remove=dim_remove
+    )
 
-	print('Filtering Test Set')
+    print('Filtering Test Set')
 
-	bas1_test = import_and_filter(folder, test_filenames, keys, include_alarms=include_alarms, dim_remove=dim_remove)
+    bas1_test = import_and_filter(
+        folder, test_filenames, keys,
+        include_alarms=include_alarms, dim_remove=dim_remove
+    )
 
-	#matches training and testing columns
-	vals_test = [x for x in bas1_test.columns if x in bas1_train.columns]
-	df_bas1_test = bas1_test[vals_test]
-	df_bas1_train = bas1_train[vals_test]
+    # matches training and testing columns
+    vals_test = [x for x in bas1_test.columns if x in bas1_train.columns]
+    df_bas1_test = bas1_test[vals_test]
+    df_bas1_train = bas1_train[vals_test]
 
-	return df_bas1_train, df_bas1_test
+    return df_bas1_train, df_bas1_test
 
-############  Sub Components  #####################
+#  Sub Components  #
 
-def import_and_filter(folder, train_filenames, keys, include_alarms=True, dim_remove=[]):
-	"""imports plant data and creates data frames with filtered data and keys
-	
-	Input:
+
+def import_and_filter(
+    folder, train_filenames, keys, include_alarms=True, dim_remove=[]
+):
+    """imports plant data and creates data frames with filtered data and keys
+
+    Input:
     folder = folder containing raw data.
     train_filenames = list of filenames to be used as dataset.
     keys = file name from current directory containing the keys spreadsheet
     include_alarms = include or remove alarms from dataset (default = True)
-    dim_remove = list of descriptors to remove from the dataset (default = NULL)
+    dim_remove = list of descriptors to remove from dataset (default = NULL)
 
     Output:
     bas1 = dataframe containing filtered plant data"""
 
-    #creates blank dataframe for appending
-	df = pd.DataFrame()
+    # creates blank dataframe for appending
+    df = pd.DataFrame()
 
-	#imports and concats all datasets
-	for train_string in train_filenames:
+    # imports and concats all datasets
+    for train_string in train_filenames:
 
-		dfloop, key = data_import(folder, train_string, keys)
-		df = pd.concat([df, dfloop], ignore_index=True)
+        dfloop, key = data_import(
+            folder, train_string, keys
+        )
+        df = pd.concat([df, dfloop], ignore_index=True)
 
-	#removes categories of descrdiptors from the dataset
-	bas = data_BAS(df, key, dim_remove=dim_remove)
+    # removes categories of descrdiptors from the dataset
+    bas = data_BAS(df, key, dim_remove=dim_remove)
 
-	#filters out alarms
-	if include_alarms == False:
-		bas1 = alarm_filter(bas, key)
-	else:
-		bas1 = bas
+    # filters out alarms
+    if include_alarms is False:
+        bas1 = alarm_filter(bas, key)
+    else:
+        bas1 = bas
 
-	#verification statement
-	print('Filtered data contains '+str(bas1.shape[0])+' points and '+str(bas1.shape[1])+ ' dimensions.')
+    # verification statement
+    print(
+        'Filtered data contains ' + str(bas1.shape[0]) + ' points and '
+        + str(bas1.shape[1]) + ' dimensions.'
+    )
 
-	return bas1
+    return bas1
+
 
 def data_import(dat_folder, string, keys):
     """imports plant data and creates data frames with raw data and keys
@@ -87,136 +105,167 @@ def data_import(dat_folder, string, keys):
 
     # Assert that string is string type
 
-    #extracts file names
-    dat_list = [f for f in glob.glob(os.path.join(dat_folder, string + '*'))]
+    # extracts file names
+    dat_list = [
+        f for f in glob.glob(os.path.join(dat_folder, string + '*'))
+    ]
     print(dat_list)
-    
-    #reads and appends content from file to a data frame
-    df = pd.DataFrame()
 
+    # reads and appends content from file to a data frame
+    df = pd.DataFrame()
     for lst in dat_list:
         df_add = pd.read_csv(lst)
         df = pd.concat([df, df_add], ignore_index=True)
-    
+
     key = pd.read_excel(keys)
-    
+
     return df, key
 
+
 def data_BAS(df, key, dim_remove=[]):
-	'''Filters out descriptors containing NaN values, calculated descriptors, and miscelaneous descriptors specified by the user.
+    '''Filters out descriptors containing NaN values, calculated descriptors,
+     and miscelaneous descriptors specified by the user.
 
-	Input:
-	df = dataframe containing plant data
-	key = dataframe containing descriptor key
-	dim_remove = list of descriptors to remove from the dataset (default = NULL)
+    Input:
+    df = dataframe containing plant data
+    key = dataframe containing descriptor key
+    dim_remove = list of descriptors to remove from dataset (default = NULL)
 
-	Output:
-	bas = dataframe filtered for descriptors and NaN values'''
+    Output:
+    bas = dataframe filtered for descriptors and NaN values'''
 
-	#finds keys from categories BAS, Chiller, Condenser Water Pump and Cooling Tower Cell
-	key_bas = key.loc[key['PointType'].str.contains("BAS")==True,'DataPointName']
-	key_chiller = key.loc[key['PointType'].str.contains("Chiller")==True,'DataPointName']
-	key_condenser = key.loc[key['PointType'].str.contains("Condenser Water Pump")==True,'DataPointName']
-	key_cool = key.loc[key['PointType'].str.contains("Cooling Tower Cell")==True,'DataPointName']
-	
-	key = pd.concat([key_bas, key_condenser, key_cool, key_chiller], ignore_index = True)
-	
-	#converts pandas series to a list for future use
-	val = key.values.T.tolist()
+    # finds keys from categories BAS, Chiller, Condenser Water Pump
+    # and Cooling Tower Cell
+    key_bas = key.loc[
+        key['PointType'].str.contains("BAS") is True, 'DataPointName'
+    ]
+    key_chiller = key.loc[
+        key['PointType'].str.contains("Chiller") is True, 'DataPointName'
+    ]
+    key_condenser = key.loc[
+        key['PointType'].str.contains("Condenser Water Pump") is True,
+        'DataPointName'
+    ]
+    key_cool = key.loc[
+        key['PointType'].str.contains("Cooling Tower Cell") is True,
+        'DataPointName'
+    ]
 
-    #removes DataPointNames that containt the prefix CHWV
-	kw = [x for x in val if not 'kW' in x]
-	vals = [x for x in kw if not x.startswith('CHWV')]
+    key = pd.concat(
+        [key_bas, key_condenser, key_cool, key_chiller], ignore_index=True
+    )
 
-	#optional dimension remover
-	for dim in dim_remove:
-		vals.remove(dim)
+    # converts pandas series to a list for future use
+    val = key.values.T.tolist()
 
+    # removes DataPointNames that containt the prefix CHWV
+    kw = [x for x in val if 'kW' not in x]
+    vals = [x for x in kw if not x.startswith('CHWV')]
 
-    #tests whether all values from the point list spreadsheet are column headings of the dataset
-	print('Descriptors in the points list that are not in the datasets.')
-	for x in vals:
-		if x not in df.columns:
-            #prints and removes any string not found in the data
-			print(x)
-			vals.remove(x)
-        #tests whether all values from the point list spreadsheet are column headings of the dataset
+    # optional dimension remover
+    for dim in dim_remove:
+        vals.remove(dim)
 
-	vals_new = [x for x in vals if x in df.columns]
+    # tests whether all values from the point list spreadsheet are column
+    # headings of the dataset
+    print('Descriptors in the points list that are not in the datasets.')
+    for x in vals:
+        if x not in df.columns:
+            # prints and removes any string not found in the data
+            print(x)
+            vals.remove(x)
+    # tests whether all values from the point list spreadsheet are column
+    # headings of the dataset
 
-    #expresses data using columns specified by the vals list
-	bas = df[vals_new+['OptimumControl', 'kW/Ton']]
-    
-	print('Original data contains '+str(df.shape[0])+' points and '+str(df.shape[1])+ ' dimensions.')
-	
-	return bas.dropna()
+    vals_new = [x for x in vals if x in df.columns]
+
+    # expresses data using columns specified by the vals list
+    bas = df[vals_new+['OptimumControl', 'kW/Ton']]
+
+    print(
+        'Original data contains ' + str(df.shape[0]) + ' points and '
+        + str(df.shape[1]) + ' dimensions.'
+    )
+
+    return bas.dropna()
 
 
 def alarm_filter(bas, key):
-	"""removes any datapoints with alarms going off or without optimum control
+    """removes any datapoints with alarms going off or without optimum control
 
-	bas = dataframe containing plant data
+    bas = dataframe containing plant data
     key = dataframe containing descriptor key"""
 
-    #filters kes to select those with alarm units that are also BAS	
-	key_alarm = key.loc[key['Units'].str.contains("Normal/Alarm")==True, 'DataPointName']
+    # filters kes to select those with alarm units that are also BAS
+    key_alarm = key.loc[
+        key['Units'].str.contains("Normal/Alarm") is True, 'DataPointName'
+    ]
 
-	vals = [x for x in key_alarm if x in bas.columns]
-	
-	#tests whether an alarm is going off
-	bas_start = bas.shape[0]
-	for alm in vals:
+    vals = [x for x in key_alarm if x in bas.columns]
 
-		#returns dataframe that have no alarms going off
-		bas = bas[bas[alm] == 0]
+    # tests whether an alarm is going off
+    bas_start = bas.shape[0]
+    for alm in vals:
 
-		bas_end = bas.shape[0]
+        # returns dataframe that have no alarms going off
+        bas = bas[bas[alm] == 0]
 
-		#compares shape before and after alarm filtering
-		if bas_end != bas_start:
-			print('A '+alm+' was noted and '+str(bas_start-bas_end)+' datapoints were removed from the dataset.')
+        bas_end = bas.shape[0]
 
-	bas = bas[bas['OptimumControl'] == 1]
+        # compares shape before and after alarm filtering
+        if bas_end != bas_start:
+            print(
+                'A ' + alm + ' was noted and ' + str(bas_start-bas_end)
+                + ' datapoints were removed from the dataset.'
+            )
 
-	return bas
+    bas = bas[bas['OptimumControl'] == 1]
 
-#### Two plant test train function
-#### THIS FUNCTION DOES NOT NEED UNIT TESTS!!!!
-#### IT IS NOT BEING USED RIGHT NOW!!!
+    return bas
 
-def train_plt_ref(train_folder, train_string, train_keys, test_folder, test_string, test_keys, include_alarms=True):
-	"""imports test and train plant data and creates data frames with filtered data
-	
-	Input:
+# two plant test train function
+# THIS FUNCTION DOES NOT NEED UNIT TESTS!!!!
+# IT IS NOT BEING USED RIGHT NOW!!!
+
+
+def train_plt_ref(
+    train_folder, train_string, train_keys, test_folder,
+    test_string, test_keys, include_alarms=True
+):
+    """imports test and train plant data and creates data frames with
+     filtered data
+
+    Input:
     train_folder = folder containing raw data.
     train_string = prefix of the csv files to be imported.
-    train_keys = file name from current directory containing the keys spreadsheet
+    train_keys = file name from current directory containing the keys
+     spreadsheet
     test_folder = folder containing raw data.
     test_string = prefix of the csv files to be imported.
-    test_keys = file name from current directory containing the keys spreadsheet
+    test_keys = file name from current directory containing keys spreadsheet
     include_alarms = include or remove alarms from dataset (default = True)
 
     Output:
     df_bas1_train = dataframe containing filtered training plant data
     df_ce bas1_test = dataframe containing filtered test plant data"""
-	print('Filtering Training Set')
-	df, key = data_import(train_folder, train_string, train_keys)
-	bas = data_BAS(df, key)
-	if include_alarm == False:
-		bas1_train = alarm_filter(bas, key)
-	else:
-		bas1_train = bas
+    print('Filtering Training Set')
+    df, key = data_import(train_folder, train_string, train_keys)
+    bas = data_BAS(df, key)
+    if include_alarm is False:
+        bas1_train = alarm_filter(bas, key)
+    else:
+        bas1_train = bas
 
-	print('Filtering Test Set')
-	df, key = data_import(test_folder, test_string, test_keys)
-	bas = data_BAS(df, key)
-	if include_alarm == False:
-		bas1 = alarm_filter(bas, key)
-	else:
-		bas1 = bas
+    print('Filtering Test Set')
+    df, key = data_import(test_folder, test_string, test_keys)
+    bas = data_BAS(df, key)
+    if include_alarm is False:
+        bas1 = alarm_filter(bas, key)
+    else:
+        bas1 = bas
 
-	vals_test = [x for x in bas1.columns if x in bas1_train.columns]
-	df_bas1_test = bas1[vals_test]
-	df_bas1_train = bas1_train[vals_test]
+    vals_test = [x for x in bas1.columns if x in bas1_train.columns]
+    df_bas1_test = bas1[vals_test]
+    df_bas1_train = bas1_train[vals_test]
 
-	return df_bas1_train, df_bas1_test
+    return df_bas1_train, df_bas1_test
