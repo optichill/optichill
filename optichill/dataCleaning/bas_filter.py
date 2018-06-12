@@ -107,7 +107,7 @@ def data_import(dat_folder, string, keys):
 
     # extracts file names
     dat_list = [
-        f for f in glob.glob(os.path.join(dat_folder, string + '*'))
+        os.path.join(dat_folder, f) for f in string
     ]
     print(dat_list)
 
