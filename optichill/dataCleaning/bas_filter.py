@@ -196,7 +196,7 @@ def alarm_filter(bas, key):
 
     # filters kes to select those with alarm units that are also BAS
     key_alarm = key.loc[
-        key['Units'].str.contains("Normal/Alarm") is True, 'DataPointName'
+        key['Units'].str.contains("Normal/Alarm") == True, 'DataPointName'
     ]
 
     vals = [x for x in key_alarm if x in bas.columns]
