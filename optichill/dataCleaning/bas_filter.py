@@ -106,9 +106,7 @@ def data_import(dat_folder, string, keys):
     # Assert that string is string type
 
     # extracts file names
-    dat_list = [
-        os.path.join(dat_folder, f) for f in string
-    ]
+    dat_list = glob.glob(os.path.join(dat_folder, string))
     print(dat_list)
 
     # reads and appends content from file to a data frame
@@ -137,17 +135,17 @@ def data_BAS(df, key, dim_remove=[]):
     # finds keys from categories BAS, Chiller, Condenser Water Pump
     # and Cooling Tower Cell
     key_bas = key.loc[
-        key['PointType'].str.contains("BAS") is True, 'DataPointName'
+        key['PointType'].str.contains("BAS") == True, 'DataPointName'
     ]
     key_chiller = key.loc[
-        key['PointType'].str.contains("Chiller") is True, 'DataPointName'
+        key['PointType'].str.contains("Chiller") == True, 'DataPointName'
     ]
     key_condenser = key.loc[
-        key['PointType'].str.contains("Condenser Water Pump") is True,
+        key['PointType'].str.contains("Condenser Water Pump") == True,
         'DataPointName'
     ]
     key_cool = key.loc[
-        key['PointType'].str.contains("Cooling Tower Cell") is True,
+        key['PointType'].str.contains("Cooling Tower Cell") == True,
         'DataPointName'
     ]
 
