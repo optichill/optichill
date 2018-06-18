@@ -8,7 +8,7 @@ import os
 
 def train_single_plt(
     folder, train_filenames, test_filenames,
-    keys, include_alarms=True, dim_remove=[]
+    keys, include_alarms=True, dim_remove=[], time_list=[]
 ):
     """imports test and train plant data and creates data frames with filtered data
     Input:
@@ -26,14 +26,14 @@ def train_single_plt(
 
     bas1_train = import_and_filter(
         folder, train_filenames, keys,
-        include_alarms=include_alarms, dim_remove=dim_remove
+        include_alarms=include_alarms, dim_remove=dim_remove, time_list=time_list
     )
 
     print('Filtering Test Set')
 
     bas1_test = import_and_filter(
         folder, test_filenames, keys,
-        include_alarms=include_alarms, dim_remove=dim_remove
+        include_alarms=include_alarms, dim_remove=dim_remove, time_list=time_list
     )
 
     # matches training and testing columns
@@ -47,7 +47,7 @@ def train_single_plt(
 
 
 def import_and_filter(
-    folder, train_filenames, keys, include_alarms=True, dim_remove=[]
+    folder, train_filenames, keys, include_alarms=True, dim_remove=[], time_list=[]
 ):
     """imports plant data and creates data frames with filtered data and keys
 
@@ -71,6 +71,9 @@ def import_and_filter(
             folder, train_string, keys
         )
         df = pd.concat([df, dfloop], ignore_index=True)
+
+    # removes optional timeframes
+    df_time = time_filter(df, time_list)
 
     # removes categories of descrdiptors from the dataset
     bas = data_BAS(df, key, dim_remove=dim_remove)
@@ -134,30 +137,19 @@ def data_BAS(df, key, dim_remove=[]):
 
     # finds keys from categories BAS, Chiller, Condenser Water Pump
     # and Cooling Tower Cell
-    key_bas = key.loc[
-        key['PointType'].str.contains("BAS") == True, 'DataPointName'
-    ]
-    key_chiller = key.loc[
-        key['PointType'].str.contains("Chiller") == True, 'DataPointName'
-    ]
-    key_condenser = key.loc[
-        key['PointType'].str.contains("Condenser Water Pump") == True,
-        'DataPointName'
-    ]
-    key_cool = key.loc[
-        key['PointType'].str.contains("Cooling Tower Cell") == True,
-        'DataPointName'
-    ]
+    keys = []
 
-    key = pd.concat(
-        [key_bas, key_condenser, key_cool, key_chiller], ignore_index=True
-    )
+    key_list = ["BAS", "Chiller", "Condenser Water Pump", "Cooling Tower Cell"]
 
-    # converts pandas series to a list for future use
-    val = key.values.T.tolist()
+    for k in range(0, len(key_list)):
+        key_loop = key.loc[
+            key['PointType'].str.contains(key_list[k])==True, 
+            'DataPointName'
+        ].T.tolist()
+        keys += key_loop
 
     # removes DataPointNames that containt the prefix CHWV
-    kw = [x for x in val if 'kW' not in x]
+    kw = [x for x in keys if 'kW' not in x]
     vals = [x for x in kw if not x.startswith('CHWV')]
 
     # optional dimension remover
@@ -186,6 +178,16 @@ def data_BAS(df, key, dim_remove=[]):
     )
 
     return bas.dropna()
+
+
+def time_filter(df, time_list):
+    ''' Filters out a specified timestamp from the dataset 
+    
+    df = dataframe containing the plant data
+    time_list = timestamps to be removed'''
+    
+    df = df[~df['timestamp'].str.contains('|'.join(time_list))]
+    return df
 
 
 def alarm_filter(bas, key):
