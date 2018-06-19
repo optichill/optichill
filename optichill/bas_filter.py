@@ -73,7 +73,7 @@ def import_and_filter(
         df = pd.concat([df, dfloop], ignore_index=True)
 
     # removes optional timeframes
-    df_time = time_filter(df, time_list)
+    # df_time = time_filter(df, time_list)
 
     # removes categories of descrdiptors from the dataset
     bas = data_BAS(df, key, dim_remove=dim_remove)
