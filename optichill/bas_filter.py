@@ -10,7 +10,8 @@ def train_single_plt(
     folder, train_filenames, test_filenames,
     keys, include_alarms=True, dim_remove=[], time_list=[]
 ):
-    """imports test and train plant data and creates data frames with filtered data
+    """imports test and train plant data and creates data frames
+    with filtered data
     Input:
     folder = path to location of raw data files
     train_filenames = list of filenames to be used as the training set.
@@ -22,18 +23,19 @@ def train_single_plt(
     Output:
     df_bas1_train = dataframe containing filtered training data
     df_bas1_test = dataframe containing filtered testS data"""
+
     print('Filtering Training Set')
 
     bas1_train = import_and_filter(
-        folder, train_filenames, keys,
-        include_alarms=include_alarms, dim_remove=dim_remove, time_list=time_list
+        folder, train_filenames, keys, include_alarms=include_alarms,
+        dim_remove=dim_remove, time_list=time_list
     )
 
     print('Filtering Test Set')
 
     bas1_test = import_and_filter(
-        folder, test_filenames, keys,
-        include_alarms=include_alarms, dim_remove=dim_remove, time_list=time_list
+        folder, test_filenames, keys, include_alarms=include_alarms,
+        dim_remove=dim_remove, time_list=time_list
     )
 
     # matches training and testing columns
@@ -47,7 +49,8 @@ def train_single_plt(
 
 
 def import_and_filter(
-    folder, train_filenames, keys, include_alarms=True, dim_remove=[], time_list=[]
+    folder, train_filenames, keys, include_alarms=True, dim_remove=[],
+    time_list=[]
 ):
     """imports plant data and creates data frames with filtered data and keys
 
@@ -73,7 +76,7 @@ def import_and_filter(
         df = pd.concat([df, dfloop], ignore_index=True)
 
     # removes optional timeframes
-    df_time = time_filter(df, time_list)
+    # df_time = time_filter(df, time_list)
 
     # removes categories of descrdiptors from the dataset
     bas = data_BAS(df, key, dim_remove=dim_remove)
@@ -104,19 +107,19 @@ def data_import(dat_folder, string, keys):
     df = dataframe containing plant data
     key = dataframe containing descriptor key"""
 
-    # Assert that dat_folder is .csv
-
-    # Assert that string is string type
+    # Assert that string is .csv
+    
+    assert string.endswith('.csv'), (
+        "file name " + string + " is not a csv"
+    )
 
     # extracts file names
     dat_list = glob.glob(os.path.join(dat_folder, string))
     print(dat_list)
+    
 
     # reads and appends content from file to a data frame
-    df = pd.DataFrame()
-    for lst in dat_list:
-        df_add = pd.read_csv(lst)
-        df = pd.concat([df, df_add], ignore_index=True)
+    df = pd.read_csv(dat_list[0])
 
     key = pd.read_excel(keys)
 
