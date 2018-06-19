@@ -47,6 +47,7 @@ setup(
         'scipy==1.0.0',
         'sklearn==0.19.1'
         'matplotlib==2.2.2'
+        'seaborn==0.8.1'
     ]
 
 )
