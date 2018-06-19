@@ -47,7 +47,7 @@ def train_single_plt(
 
 
 def import_and_filter(
-    folder, train_filenames, keys, include_alarms=True, dim_remove=[], time_list=[]
+    folder, train_filenames, keys, include_alarms=True, dim_remove=[]
 ):
     """imports plant data and creates data frames with filtered data and keys
 
@@ -73,7 +73,6 @@ def import_and_filter(
         df = pd.concat([df, dfloop], ignore_index=True)
 
     # removes optional timeframes
-    # df_time = time_filter(df, time_list)
 
     # removes categories of descrdiptors from the dataset
     bas = data_BAS(df, key, dim_remove=dim_remove)
@@ -186,8 +185,8 @@ def time_filter(df, time_list):
     df = dataframe containing the plant data
     time_list = timestamps to be removed'''
     
-    df = df[~df['timestamp'].str.contains('|'.join(time_list))]
-    return df
+    #df = df[~df['timestamp'].str.contains('|'.join(time_list))]
+    return #df
 
 
 def alarm_filter(bas, key):
