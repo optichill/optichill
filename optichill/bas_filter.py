@@ -76,6 +76,7 @@ def import_and_filter(
         df = pd.concat([df, dfloop], ignore_index=True)
 
     # removes optional timeframes
+
     # df_time = time_filter(df, time_list)
 
     # removes categories of descrdiptors from the dataset
@@ -189,8 +190,8 @@ def time_filter(df, time_list):
     df = dataframe containing the plant data
     time_list = timestamps to be removed'''
     
-    df = df[~df['timestamp'].str.contains('|'.join(time_list))]
-    return df
+    #df = df[~df['timestamp'].str.contains('|'.join(time_list))]
+    return #df
 
 
 def alarm_filter(bas, key):
