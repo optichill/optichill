@@ -64,6 +64,11 @@ def import_and_filter(
     Output:
     bas1 = dataframe containing filtered plant data"""
 
+    # asserts that the list of filenames is indeed a list
+    assert isinstance(train_filenames, list), (
+        "train_filenames needs to be a list!"
+    )
+
     # creates blank dataframe for appending
     df = pd.DataFrame()
 
@@ -149,6 +154,12 @@ def data_BAS(df, key, dim_remove=[]):
 
     key_list = ["BAS", "Chiller", "Condenser Water Pump", "Cooling Tower Cell"]
 
+    # assert that the key list entries are in the PointType
+    for key_test in key_list:
+        assert key_test in key['PointType'].T.tolist(), (
+            "the PointType " + key_test + " Could not be found in the points list."
+        )
+
     for k in range(0, len(key_list)):
         key_loop = key.loc[
             key['PointType'].str.contains(key_list[k])==True, 
@@ -156,23 +167,31 @@ def data_BAS(df, key, dim_remove=[]):
         ].T.tolist()
         keys += key_loop
 
-    # removes DataPointNames that containt the prefix CHWV
+    # assert that the key list is in fact a list
+    assert isinstance(keys, list), (
+        'The PointType list is not a list.'
+    )
+
+    # removes DataPointNames that containt the prefix CHWV and kW
     kw = [x for x in keys if 'kW' not in x]
     vals = [x for x in kw if not x.startswith('CHWV')]
 
     # optional dimension remover
     for dim in dim_remove:
+
+        #asserts that the dimension is in the descriptors list
+        assert dim in vals, (
+            dim + " is not in the descriptors list"
+        )
         vals.remove(dim)
 
-    # tests whether all values from the point list spreadsheet are column
-    # headings of the dataset
     print('Descriptors in the points list that are not in the datasets.')
     for x in vals:
         if x not in df.columns:
             # prints and removes any string not found in the data
             print(x)
             vals.remove(x)
-    # tests whether all values from the point list spreadsheet are column
+
     # headings of the dataset
 
     vals_new = [x for x in vals if x in df.columns]
@@ -184,6 +203,8 @@ def data_BAS(df, key, dim_remove=[]):
         'Original data contains ' + str(df.shape[0]) + ' points and '
         + str(df.shape[1]) + ' dimensions.'
     )
+
+    bas = bas[bas['OptimumControl'] == 1]
 
     return bas.dropna()
 
@@ -226,8 +247,6 @@ def alarm_filter(bas, key):
                 'A ' + alm + ' was noted and ' + str(bas_start-bas_end)
                 + ' datapoints were removed from the dataset.'
             )
-
-    bas = bas[bas['OptimumControl'] == 1]
 
     return bas
 
