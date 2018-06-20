@@ -111,13 +111,17 @@ def data_import(dat_folder, string, keys):
     # Assert that string is .csv
     
     assert string.endswith('.csv'), (
-        "file name " + string + " is not a csv"
+        "file name " + string + " is not a csv!"
+    )
+
+    # assert that the path inputted exists
+    assert os.path.exists(dat_folder), (
+        "path " + dat_folder + " does not exist!"
     )
 
     # extracts file names
     dat_list = glob.glob(os.path.join(dat_folder, string))
     print(dat_list)
-    
 
     # reads and appends content from file to a data frame
     df = pd.read_csv(dat_list[0])
