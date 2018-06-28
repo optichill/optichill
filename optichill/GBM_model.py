@@ -10,7 +10,7 @@ def train_model(
 	min_samp_splt=2, lrn_rt=0.01, losss='ls', feat_filename=None
 ):
 	"""
-	This functions takes dataframes of the x and y values for training and testing
+	This function takes dataframes of the x and y values for training and testing
 	and uses the scikit learn toolbox to train a Gradient Boosting Regressor model
 	with preset parameters that can	be specified. It returns a trained model and
 	the r2 value of the trained model. There is an option to create a normalized
