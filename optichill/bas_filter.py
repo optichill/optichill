@@ -162,7 +162,7 @@ def data_BAS(df, key, dim_remove=[]):
 
     for k in range(0, len(key_list)):
         key_loop = key.loc[
-            key['PointType'].str.contains(key_list[k]),
+            key['PointType'].str.contains(key_list[k]) == True,
             'DataPointName'
         ].T.tolist()
         keys += key_loop
@@ -227,7 +227,7 @@ def alarm_filter(bas, key):
 
     # filters kes to select those with alarm units that are also BAS
     key_alarm = key.loc[
-        key['Units'].str.contains("Normal/Alarm"), 'DataPointName'
+        key['Units'].str.contains("Normal/Alarm") == True, 'DataPointName'
     ]
 
     vals = [x for x in key_alarm if x in bas.columns]
