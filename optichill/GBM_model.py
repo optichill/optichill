@@ -10,11 +10,11 @@ def train_model(
     min_samp_splt=2, lrn_rt=0.01, losss='ls', feat_filename=None
 ):
     """
-    This function takes dataframes of the x and y values for training and testing
-    and uses the scikit learn toolbox to train a Gradient Boosting Regressor model
-    with preset parameters that can be specified. It returns a trained model and
-    the r2 value of the trained model. There is an option to create a normalized
-    list of the features to a user-named Excel file.
+    This function takes dataframes of the x and y values for training and
+    testing and uses the scikit learn toolbox to train a Gradient Boosting
+    Regressor model with preset parameters that can be specified. It returns
+    a trained model and the r2 value of the trained model. There is an option
+    to create a normalized list of the features to a user-named Excel file.
     """
     # Reshaping the inputs into numpy arrays for the scikit learn module.
     xtrain = xtrain_df.values
@@ -35,6 +35,7 @@ def train_model(
     # Feature importance list function call
     if feat_filename:
         assert isinstance(feat_filename, str)
+
         feature_importance_list(feat_filename, xtest_df)
         return test_score
     else:
@@ -59,11 +60,15 @@ def feature_importance_list(file_name_string, xtest_df):
     filename = 'trained_model.sav'
     new_model = pickle.load(open(filename, 'rb'))
     feature_importance = new_model.feature_importances_
-    feature_importance = 100.0 * (feature_importance / feature_importance.max())
+    feature_importance = 100.0 * (
+        feature_importance / feature_importance.max()
+    )
     sorted_idx = np.argsort(feature_importance)
     pos = np.arange(sorted_idx.shape[0]) + 0.5
     x = xtest_df.columns[sorted_idx]
     imp = feature_importance[sorted_idx]
     df_feats = pd.DataFrame({'Feature Name': x, 'Feature Importance': imp})
     df_feats.to_csv(file_name_string)
-    return print("The feature importance list was created as", file_name_string)
+    return print(
+        "The feature importance list was created as", file_name_string
+    )
