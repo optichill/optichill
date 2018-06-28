@@ -10,7 +10,8 @@ Optichill is a tool that can be used to predict the efficiency of a given chille
 * Packages used in the tool "os, glob, numpy, scipy, pandas, sklearn, pickle"
 
 ## ORGANIZATION OF THE PROJECT
-`data/
+```
+data/
 doc/
 	images/
 	posters/
@@ -34,5 +35,5 @@ LICENSE
 README.md
 requirements.txt
 setup.py
-`
+```
 ## SETUP

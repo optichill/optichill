@@ -5,13 +5,15 @@ from sklearn.metrics import r2_score
 import pickle
 from optichill import bas_filter
 from optichill import GBM_model
+import os
 
 
 def test_train_model():
     """
     This functions tests the train_model function.
     """
-    dat_folder = '../../data'
+    dirname = os.path.dirname(__file__)
+    dat_folder = os.path.join(dirname, '../../data')
     list_train = ['Plt1 h 2017-05.csv']
     list_test = ['Plt1 h 2017-11.csv']
     keys = 'data/Plt1 Points List.xlsx'
@@ -30,7 +32,7 @@ def test_train_model():
     )
     try:
         GBM_model.train_model(
-            xtrain, ytrain, xtest, ytest, feat_filename=csv_file
+            xtrain, ytrain, xtest, ytest, feat_filename=2
         )
     except(AssertionError):
         pass
@@ -50,4 +52,5 @@ def test_feature_importance_list():
     """
     This function tests the feature_imortantce_list function.
     """
+
     return
