@@ -77,12 +77,12 @@ def test_data_BAS():
     df, key = bas_filter.data_import(dat_folder, string, keys)
     bas = bas_filter.data_BAS(df, key, dim_remove=dim_remove)
 
-    assert isinstance(df, pd.DataFrame), (
+    assert isinstance(bas, pd.DataFrame), (
         "variable containing filtered data is not a pandas dataframe!"
     )
 
     cat_test = bas.columns.tolist()
-    cat_test.remove('timestamp')
+    # cat_test.remove('timestamp')
 
     for cat in cat_test:
         assert cat in key['DataPointName'].T.tolist(), (
