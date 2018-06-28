@@ -34,6 +34,7 @@ def train_model(
 	pickle.dump(model, open(filename, 'wb'))
 	# Feature importance list function call
 	if feat_filename:
+		assert isinstance(feat_filename, str)
 		feature_importance_list(feat_filename, xtest_df)
 		return test_score
 	else:
