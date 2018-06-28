@@ -15,6 +15,7 @@ def train_model(
     Regressor model with preset parameters that can be specified. It returns
     a trained model and the r2 value of the trained model. There is an option
     to create a normalized list of the features to a user-named Excel file.
+    feat_filename should be a csv file string.
     """
     # Reshaping the inputs into numpy arrays for the scikit learn module.
     xtrain = xtrain_df.values
@@ -51,12 +52,18 @@ def predict_model():
     return new_model
 
 
-def feature_importance_list(file_name_string, xtest_df):
+def feature_importance_list(feat_filename, xtest_df):
     """
     This function takes the trained model and returns an ordered list of the
     relative importance of the features. This will be written to an Excel
     file that the user will specify.
     """
+    if '.csv' in feat_filename:
+        pass
+    else:
+        raise Exception(
+            'Error: Feature importance file must be a .csv file.'
+        )
     filename = 'trained_model.sav'
     new_model = pickle.load(open(filename, 'rb'))
     feature_importance = new_model.feature_importances_
@@ -70,5 +77,5 @@ def feature_importance_list(file_name_string, xtest_df):
     df_feats = pd.DataFrame({'Feature Name': x, 'Feature Importance': imp})
     df_feats.to_csv(file_name_string)
     return print(
-        "The feature importance list was created as", file_name_string
+        "The feature importance list was created as", feat_filename
     )

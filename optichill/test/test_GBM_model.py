@@ -50,7 +50,29 @@ def test_predict_model():
 
 def test_feature_importance_list():
     """
-    This function tests the feature_imortantce_list function.
+    This function tests the feature_importance_list function.
     """
-
+    # Assertion that the string is a csv file
+    dirname = os.path.dirname(__file__)
+    dat_folder = os.path.join(dirname, '../../data')
+    list_train = ['Plt1 h 2017-05.csv']
+    list_test = ['Plt1 h 2017-11.csv']
+    keys = 'data/Plt1 Points List.xlsx'
+    df_train, df_test = bas_filter.train_single_plt(
+        dat_folder, list_train, list_test,
+        keys, include_alarms=False
+    )
+    ytrain = df_train['kW/Ton']
+    ytest = df_test['kW/Ton']
+    xtrain = df_train.drop(['kW/Ton'], axis=1)
+    xtest = df_test.drop(['kW/Ton'], axis=1)
+    GBM_model.train_model(xtrain, ytrain, xtest, ytest)
+    try:
+        GBM_model.feature_importance_list(
+            'files.txt', xtest
+        )
+    except(Exception):
+        pass
+    else:
+        raise Exception('.csv Exception not raised. Fix it.')
     return
