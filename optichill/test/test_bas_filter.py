@@ -1,8 +1,6 @@
 import pandas as pd
-import numpy as np
-import glob
-import os
 from optichill import bas_filter
+
 
 def test_train_single_plt():
     dat_folder = 'data'
@@ -16,10 +14,11 @@ def test_train_single_plt():
     )
 
     assert len(df_train.columns.tolist()) == len(df_test.columns.tolist()), (
-        "the training and testing dataframes have different numbers of descriptors!"
+        "the training and testing sets have different numbers of descriptors!"
     )
 
     return
+
 
 def test_import_and_filter():
 
@@ -35,7 +34,7 @@ def test_import_and_filter():
         "you've filtered out all of your data!"
     )
     assert df.shape[1] != 0, (
-    	"you have no descriptors, check your filtering!"
+        "you have no descriptors, check your filtering!"
     )
 
     return
@@ -82,7 +81,7 @@ def test_data_BAS():
         "variable containing filtered data is not a pandas dataframe!"
     )
 
-    cat_test = df.columns.tolist()
+    cat_test = bas.columns.tolist()
     cat_test.remove('timestamp')
 
     for cat in cat_test:

@@ -1,5 +1,5 @@
-"""A setuptools-based setup module adapted from the Python Packaging Authority's
-sample project.
+"""A setuptools-based setup module adapted from the Python Packaging
+Authority's sample project.
 
 See:
 https://packaging.python.org/en/latest/distributing.html
@@ -35,7 +35,8 @@ setup(
     # This is a one-line description or tagline of what your project does. This
     # corresponds to the "Summary" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#summary
-    description='Machine Learning Package for chiller plant efficiency',  # Required
+    description='Machine Learning Package for chiller plant efficiency',
+    # Required
     url='https://github.com/optichill/optichill',
     author='Optimum energy DIRECT team',
     packages=find_packages(),

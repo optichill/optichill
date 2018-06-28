@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 import glob
 import os
 
@@ -114,7 +113,7 @@ def data_import(dat_folder, string, keys):
     key = dataframe containing descriptor key"""
 
     # Assert that string is .csv
-    
+
     assert string.endswith('.csv'), (
         "file name " + string + " is not a csv!"
     )
@@ -157,12 +156,13 @@ def data_BAS(df, key, dim_remove=[]):
     # assert that the key list entries are in the PointType
     for key_test in key_list:
         assert key_test in key['PointType'].T.tolist(), (
-            "the PointType " + key_test + " Could not be found in the points list."
+            "the PointType " + key_test + 
+            " Could not be found in the points list."
         )
 
     for k in range(0, len(key_list)):
         key_loop = key.loc[
-            key['PointType'].str.contains(key_list[k])==True, 
+            key['PointType'].str.contains(key_list[k]),
             'DataPointName'
         ].T.tolist()
         keys += key_loop
@@ -179,7 +179,7 @@ def data_BAS(df, key, dim_remove=[]):
     # optional dimension remover
     for dim in dim_remove:
 
-        #asserts that the dimension is in the descriptors list
+        # asserts that the dimension is in the descriptors list
         assert dim in vals, (
             dim + " is not in the descriptors list"
         )
@@ -210,12 +210,12 @@ def data_BAS(df, key, dim_remove=[]):
 
 
 def time_filter(df, time_list):
-    ''' Filters out a specified timestamp from the dataset 
-    
+    ''' Filters out a specified timestamp from the dataset
+
     df = dataframe containing the plant data
     time_list = timestamps to be removed'''
-    
-    #df = df[~df['timestamp'].str.contains('|'.join(time_list))]
+
+    # df = df[~df['timestamp'].str.contains('|'.join(time_list))]
     return #df
 
 
@@ -227,7 +227,7 @@ def alarm_filter(bas, key):
 
     # filters kes to select those with alarm units that are also BAS
     key_alarm = key.loc[
-        key['Units'].str.contains("Normal/Alarm") == True, 'DataPointName'
+        key['Units'].str.contains("Normal/Alarm"), 'DataPointName'
     ]
 
     vals = [x for x in key_alarm if x in bas.columns]
@@ -278,7 +278,7 @@ def train_plt_ref(
     print('Filtering Training Set')
     df, key = data_import(train_folder, train_string, train_keys)
     bas = data_BAS(df, key)
-    if include_alarm is False:
+    if include_alarms is False:
         bas1_train = alarm_filter(bas, key)
     else:
         bas1_train = bas
@@ -286,7 +286,7 @@ def train_plt_ref(
     print('Filtering Test Set')
     df, key = data_import(test_folder, test_string, test_keys)
     bas = data_BAS(df, key)
-    if include_alarm is False:
+    if include_alarms is False:
         bas1 = alarm_filter(bas, key)
     else:
         bas1 = bas
