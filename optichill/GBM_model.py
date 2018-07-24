@@ -71,11 +71,11 @@ def feature_importance_list(feat_filename, xtest_df):
         feature_importance / feature_importance.max()
     )
     sorted_idx = np.argsort(feature_importance)
-    pos = np.arange(sorted_idx.shape[0]) + 0.5
+    # pos = np.arange(sorted_idx.shape[0]) + 0.5
     x = xtest_df.columns[sorted_idx]
     imp = feature_importance[sorted_idx]
     df_feats = pd.DataFrame({'Feature Name': x, 'Feature Importance': imp})
-    df_feats.to_csv(file_name_string)
+    df_feats.to_csv(feat_filename)
     return print(
         "The feature importance list was created as", feat_filename
     )

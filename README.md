@@ -37,3 +37,9 @@ requirements.txt
 setup.py
 ```
 ## SETUP
+
+1.	Clone this repo onto your local machine
+2.  Pip install the module with the following command:
+```
+pip install optichill
+```

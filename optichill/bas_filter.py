@@ -156,13 +156,13 @@ def data_BAS(df, key, dim_remove=[]):
     # assert that the key list entries are in the PointType
     for key_test in key_list:
         assert key_test in key['PointType'].T.tolist(), (
-            "the PointType " + key_test + 
+            "the PointType " + key_test +
             " Could not be found in the points list."
         )
 
     for k in range(0, len(key_list)):
         key_loop = key.loc[
-            key['PointType'].str.contains(key_list[k]) == True,
+            key['PointType'].str.contains(key_list[k]),
             'DataPointName'
         ].T.tolist()
         keys += key_loop
@@ -209,16 +209,6 @@ def data_BAS(df, key, dim_remove=[]):
     return bas.dropna()
 
 
-def time_filter(df, time_list):
-    ''' Filters out a specified timestamp from the dataset
-
-    df = dataframe containing the plant data
-    time_list = timestamps to be removed'''
-
-    # df = df[~df['timestamp'].str.contains('|'.join(time_list))]
-    return #df
-
-
 def alarm_filter(bas, key):
     """removes any datapoints with alarms going off or without optimum control
 
@@ -226,8 +216,10 @@ def alarm_filter(bas, key):
     key = dataframe containing descriptor key"""
 
     # filters kes to select those with alarm units that are also BAS
+    key = key.dropna()
+
     key_alarm = key.loc[
-        key['Units'].str.contains("Normal/Alarm") == True, 'DataPointName'
+        key['Units'].str.contains("Normal/Alarm"), 'DataPointName'
     ]
 
     vals = [x for x in key_alarm if x in bas.columns]
