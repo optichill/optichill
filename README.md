@@ -43,3 +43,5 @@ setup.py
 ```
 pip install optichill
 ```
+3.  Start work using the tutorials notebook under examples
+4.  Expaind your work to any of the notebooks in examples
