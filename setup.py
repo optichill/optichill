@@ -30,7 +30,7 @@ setup(
 
     # Versions should comply with PEP 440:
     # https://www.python.org/dev/peps/pep-0440/
-    version='1.0',  # Required
+    version='1.0.2',  # Required
 
     # This is a one-line description or tagline of what your project does. This
     # corresponds to the "Summary" metadata field:
@@ -39,6 +39,7 @@ setup(
     # Required
     url='https://github.com/optichill/optichill',
     author='Optimum energy DIRECT team',
+    author_email='tacohen@uw.edu',
     packages=find_packages(),
 
 
