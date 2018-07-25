@@ -6,7 +6,7 @@
 Optichill is a tool that can be used to predict the efficiency of a given chiller plant based on the recorded data from the plant. The module sorts out the chiller plant data to filter redundant features. The features are then sorted based on "importance" with plant efficiency (measured as kW/ton) with Gradient Boosted Machines. 	
 
 ## SOFTWARE DEPENDENCIES
-* Python Version 3.6
+* Python Version 3.5 and 3.6
 * Packages used in the tool "os, glob, numpy, scipy, pandas, sklearn, pickle"
 
 ## ORGANIZATION OF THE PROJECT
