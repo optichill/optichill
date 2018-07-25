@@ -23,9 +23,9 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     # Install this project using:
-    # $ pip install chachies
+    # $ pip install optichill
     #
-    # It lives on PyPI: https://pypi.org/project/chachies/
+    # It lives on PyPI: https://pypi.org/project/optichill/
     name='optichill',
 
     # Versions should comply with PEP 440:

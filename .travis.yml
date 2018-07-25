@@ -32,3 +32,12 @@ script:
 after_success:
     - coverage report
     - coveralls
+
+# deploys software package
+deploy:
+  provider: pypi
+  user: tacohen
+  password:
+    secure: "uQ9Xaplai/kOGljIlLDTITtZ5qTdy6SzgXX0xxKhaRTN6a6Kxa1xGeRP/TzoOOWMxBs8CsZRST3VhVBTLl2eIUJM9PU7xbmAgfpLaam4fOKNb20YpnovKJxZB6M9WMIfXbr09cIGqnXCU+Lgcfr9AO35eKx+qqXscKMt8VcchweUfs4E4rhSUEUzssmFoSj1tOvvXVVtsPvbqyeyjHLMVOlOkwRWKxUjPzWomUIh/jirVaRS7UZoRk0E+bqk0m6uq4LgeYmBkwdabJlnM5Q0Dkkgk9eAmrHwrkfUlRhq2GRtLI8h+HHfBt77/2QdmSUfjTmMpFldn1WYjU6DHBHhjiTTokwavf4oT/0I7yGwhKIc4UpEh9A1Hu1ZdLsfmSeCYj05TyXnYavz47ARDBdt72CjF5wK9n76lSj81neXLxq5B6BIAvFhwT4HM3O8k4PX2YJlcLGLlZm0CmTR9Da7y6l3fx9xT1kob6yag6NUbilSb+J5OPb5eIeXdKuZewulC+NAqR2391AjEQ//W0YGnlYPFX/85vD9Z1kpb+RMFXxCEDUIVT+aliGVaJeq7iQAAuZsCvlHFmBhq6NLKy1v8q2IOa8q8asF08/oVYSdFQdaAV6He7tnjJgFOpSTFd4b6pJmzhm4LSkrWIgtY/EGdk5EUUvpXy7ZNhLI+leeDmg="
+  on:
+    tags: true
